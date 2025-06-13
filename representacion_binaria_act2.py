@@ -6,7 +6,6 @@ df = pd.read_csv('notas_1u.csv')
 alumnos = df['Alumno'].tolist()
 notas = df['Nota'].tolist()
 
-# crea una solución inicial aleatoria
 def crear_cromosoma():
     cromosoma = []
     for i in range(39):
@@ -16,7 +15,6 @@ def crear_cromosoma():
         cromosoma.extend(genes)
     return cromosoma
 
-# convierte un cromosoma en un diccionario para asignar al examen
 def decodificar_cromosoma(cromosoma):
     asignaciones = {'A': [], 'B': [], 'C': []}
     examenes = ['A', 'B', 'C']
@@ -30,7 +28,6 @@ def decodificar_cromosoma(cromosoma):
     
     return asignaciones
 
-# qué tan buena es la solución
 def calcular_fitness(cromosoma):
     asignaciones = decodificar_cromosoma(cromosoma)
     
@@ -38,15 +35,35 @@ def calcular_fitness(cromosoma):
         return -1000
     
     promedios = {}
+    varianzas = {}
+    diversidades = []
+
+    # Estadísticas globales (para medir diversidades relativas)
+    global_mean = np.mean(notas)
+    global_std = np.std(notas)
+
     for examen in ['A', 'B', 'C']:
         indices = asignaciones[examen]
         notas_examen = [notas[i] for i in indices]
-        promedios[examen] = np.mean(notas_examen)
-    
-    desviacion = np.std(list(promedios.values()))
-    return -desviacion
+        
+        promedio = np.mean(notas_examen)
+        varianza = np.var(notas_examen)
 
-# crea una nuevo cromosoma
+        # medida de diversidad : cuán balanceado es respecto al promedio global
+        diversidad = -abs(promedio - global_mean) / global_std
+
+        promedios[examen] = promedio
+        varianzas[examen] = varianza
+        diversidades.append(diversidad)
+
+    #penalizar desviación entre promedios
+    desviacion_promedios = np.std(list(promedios.values()))
+    penalizacion_varianza = np.mean(list(varianzas.values()))
+    bonificacion_diversidad = np.mean(diversidades) # premia diversidad en rendimiento
+
+    fitness = -desviacion_promedios - penalizacion_varianza + bonificacion_diversidad
+    return fitness
+
 def mutacion(cromosoma):
     cromosoma_mutado = cromosoma.copy()
     
