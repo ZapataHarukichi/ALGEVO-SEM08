@@ -34,12 +34,10 @@ def calcular_fitness(cromosoma):
     if any(conteo == len(bajo_rendimiento) for conteo in conteos.values()):
         return -1000 #penalización fuerte
 
-
     promedios = []
     for grupo in ['A', 'B', 'C']:
         notas_grupo = [notas[i] for i in asignaciones[grupo]]
         promedios.append(np.mean(notas_grupo))
-
 
     return -np.std(promedios)
 

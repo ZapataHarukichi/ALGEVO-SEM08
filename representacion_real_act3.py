@@ -116,18 +116,19 @@ def mutacion_gaussiana(cromosoma, sigma=0.1):
 
 
 
-
-
 def algoritmo_genetico(generaciones=150, tam_poblacion=100):
     poblacion = [crear_cromosoma() for _ in range(tam_poblacion)]
     
     mejor_global_fitness = float('-inf')
     mejor_global_cromosoma = None
     
+    historial_fitness = []
     for gen in range(generaciones):
         fitness_scores = [(crom, calcular_fitness(crom)) for crom in poblacion]
         fitness_scores.sort(key=lambda x: x[1], reverse=True)
         
+        historial_fitness.append(fitness_scores[0][1])
+
         if fitness_scores[0][1] > mejor_global_fitness:
             mejor_global_fitness = fitness_scores[0][1]
             mejor_global_cromosoma = fitness_scores[0][0].copy()
@@ -143,7 +144,7 @@ def algoritmo_genetico(generaciones=150, tam_poblacion=100):
             padre2 = random.choice(poblacion[:tam_poblacion//4])[0] if isinstance(poblacion[0], tuple) else random.choice(poblacion[:tam_poblacion//4])
             
             hijo = cruce(padre1, padre2)
-            hijo = mutacion_gaussiana(hijo, sigma=0.1)
+            hijo = mutacion_gaussiana(hijo, sigma=0.5)
             nueva_poblacion.append(hijo)
         
         poblacion = nueva_poblacion
@@ -151,14 +152,14 @@ def algoritmo_genetico(generaciones=150, tam_poblacion=100):
         if gen % 30 == 0:
             print(f"Generación {gen}: Mejor fitness = {fitness_scores[0][1]:.4f}")
     
-    return mejor_global_cromosoma
+    return mejor_global_cromosoma, historial_fitness
 
 print("REPRESENTACIÓN REAL")
 print("Problema: Optimizar distribución de alumnos usando pesos probabilísticos")
 print("Cromosoma: 117 valores reales (39 alumnos × 3 pesos normalizados)")
 print("Gen: [0.2, 0.5, 0.3] representa probabilidades para exámenes A, B, C\n")
 
-mejor_solucion = algoritmo_genetico()
+mejor_solucion, historial_fitness = algoritmo_genetico()
 asignaciones_finales = decodificar_cromosoma(mejor_solucion)
 
 print("\nDistribución optimizada:")
@@ -181,3 +182,10 @@ for examen in ['A', 'B', 'C']:
 print(f"Promedios por examen: A={promedios[0]:.2f}, B={promedios[1]:.2f}, C={promedios[2]:.2f}")
 print(f"Desviación estándar entre promedios: {np.std(promedios):.4f}")
 print(f"Diferencia máxima entre promedios: {max(promedios) - min(promedios):.2f}")
+
+
+import visualizacion
+visualizacion.graficar_evolucion_fitness(historial_fitness, guardar_como='evolucion_real.png')
+visualizacion.graficar_histograma_notas(asignaciones_finales, notas, guardar_como='notas_examenes.png')
+
+#visualizacion.comparar_representaciones()

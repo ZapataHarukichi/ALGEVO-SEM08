@@ -2,28 +2,27 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-def graficar_evolucion_fitness(historial_fitness, titulo='Evolución del Fitness'):
+def graficar_evolucion_fitness(historial_fitness, guardar_como='fitness.png'):
     plt.figure(figsize=(10, 5))
     plt.plot(historial_fitness, marker='o', color='green')
-    plt.title(titulo)
+    plt.title("Evolución del fitness por generación")
     plt.xlabel('Generación')
     plt.ylabel('Fitness')
     plt.grid(True)
     plt.tight_layout()
-    plt.show()
+    plt.savefig(guardar_como)
+    plt.close()
 
 def graficar_histograma_notas(asignaciones, notas, titulo='Distribución de Notas por Examen'):
-    datos = []
-    for grupo, indices in asignaciones.items():
-        for i in indices:
-            datos.append({'Examen': grupo, 'Nota': notas[i]})
-
-    df_notas = sns.load_dataset("tips")  # solo para asegurar que seaborn está bien cargado (evita errores)
     plt.figure(figsize=(10, 6))
-    sns.histplot(data=datos, x='Nota', hue='Examen', multiple='stack', palette='Set2', bins=10)
-    plt.title(titulo)
-    plt.xlabel('Nota')
-    plt.ylabel('Frecuencia')
+    for examen, color in zip(['A', 'B', 'C'], ['#1f77b4', '#2ca02c', '#d62728']):
+        notas_examen = [notas[i] for i in asignaciones[examen]]
+        sns.histplot(notas_examen, kde=False, bins=10, label=f'Examen {examen}', color=color, alpha=0.6)
+
+    plt.title("Distribución de notas por examen")
+    plt.xlabel("Nota")
+    plt.ylabel("Frecuencia")
+    plt.legend()
     plt.tight_layout()
     plt.show()
 
@@ -41,4 +40,5 @@ def comparar_representaciones(stats):
 
     plt.tight_layout()
     plt.show()
+
 
