@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-def graficar_evolucion_fitness(historial_fitness, guardar_como='fitness.png'):
+def graficar_evolucion_fitness(historial_fitness, guardar_como):
     plt.figure(figsize=(10, 5))
     plt.plot(historial_fitness, marker='o', color='green')
     plt.title("Evolución del fitness por generación")
@@ -13,7 +13,7 @@ def graficar_evolucion_fitness(historial_fitness, guardar_como='fitness.png'):
     plt.savefig(guardar_como)
     plt.close()
 
-def graficar_histograma_notas(asignaciones, notas, titulo='Distribución de Notas por Examen'):
+def graficar_histograma_notas(asignaciones, notas, guardar_como):
     plt.figure(figsize=(10, 6))
     for examen, color in zip(['A', 'B', 'C'], ['#1f77b4', '#2ca02c', '#d62728']):
         notas_examen = [notas[i] for i in asignaciones[examen]]
@@ -24,7 +24,8 @@ def graficar_histograma_notas(asignaciones, notas, titulo='Distribución de Nota
     plt.ylabel("Frecuencia")
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    plt.savefig(guardar_como)
+    plt.close()
 
 def comparar_representaciones(stats):
     # stats debe ser una lista de tuplas: [(label, lista_notas_A, lista_notas_B, lista_notas_C), ...]

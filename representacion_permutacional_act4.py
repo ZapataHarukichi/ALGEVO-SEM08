@@ -54,11 +54,13 @@ def algoritmo_genetico(generaciones=100, tam_poblacion=50):
     poblacion = [crear_cromosoma() for _ in range(tam_poblacion)]
     mejor_fitness = float('-inf')
     mejor_cromosoma = None
-
+    
+    historial_fitness = []
     for gen in range(generaciones):
         fitness_scores = [(c, calcular_fitness(c)) for c in poblacion]
         fitness_scores.sort(key =lambda x: x[1], reverse=True) #???
 
+        historial_fitness.append(fitness_scores[0][1])
         if fitness_scores[0][1] > mejor_fitness:
             mejor_fitness = fitness_scores[0][1]
             mejor_cromosoma = fitness_scores[0][0]
@@ -77,14 +79,14 @@ def algoritmo_genetico(generaciones=100, tam_poblacion=50):
         if gen % 20 == 0:
             print(f"Generacion {gen}: Mejor fitness = {fitness_scores[0][1]:.4f}")
 
-    return mejor_cromosoma
+    return mejor_cromosoma, historial_fitness
 
 # Ejecución
 print("REPRESENTACIÓN PERMUTACIONAL")
 print("Cromosoma: Permutación de 39 alumnos")
 print("Examen A = pos 0–12 | B = 13–25 | C = 26–38\n")
 
-mejor_soluc = algoritmo_genetico()
+mejor_soluc, historial_fitness = algoritmo_genetico()
 asignaciones_finales = decodificar_cromosoma(mejor_soluc)
 
 print("\nDistribución final:")
@@ -103,4 +105,8 @@ for examen in ['A', 'B', 'C']:
 
 print(f"Desviación estándar entre promedios: {np.std(promedios):.4f}")
 
+
+import visualizacion
+visualizacion.graficar_evolucion_fitness(historial_fitness, guardar_como='fitness_repre_permutacional.png')
+visualizacion.graficar_histograma_notas(asignaciones_finales, notas, guardar_como='notas_repre_permutacional.png')
 

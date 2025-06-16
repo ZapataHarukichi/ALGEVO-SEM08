@@ -95,7 +95,7 @@ def mutacion(cromosoma):
     
     return cromosoma_mutado
 
-def algoritmo_genetico(generaciones=150, tam_poblacion=100):
+def algoritmo_genetico(generaciones=300, tam_poblacion=100):
     poblacion = [crear_cromosoma() for _ in range(tam_poblacion)]
     
     mejor_global_fitness = float('-inf')

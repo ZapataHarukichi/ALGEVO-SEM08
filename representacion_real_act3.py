@@ -185,7 +185,5 @@ print(f"Diferencia máxima entre promedios: {max(promedios) - min(promedios):.2f
 
 
 import visualizacion
-visualizacion.graficar_evolucion_fitness(historial_fitness, guardar_como='evolucion_real.png')
-visualizacion.graficar_histograma_notas(asignaciones_finales, notas, guardar_como='notas_examenes.png')
-
-#visualizacion.comparar_representaciones()
+visualizacion.graficar_evolucion_fitness(historial_fitness, guardar_como='fitness_repre_real.png')
+visualizacion.graficar_histograma_notas(asignaciones_finales, notas, guardar_como='notas_repre_real.png')

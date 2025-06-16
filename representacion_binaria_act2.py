@@ -87,11 +87,11 @@ def mutacion(cromosoma):
 
 def algoritmo_genetico(generaciones=100, tam_poblacion=50):
     poblacion = [crear_cromosoma() for _ in range(tam_poblacion)]
-    
+    historial_fitness = []
     for gen in range(generaciones):
         fitness_scores = [(crom, calcular_fitness(crom)) for crom in poblacion]
         fitness_scores.sort(key=lambda x: x[1], reverse=True)
-        
+        historial_fitness.append(fitness_scores[0][1])
         nueva_poblacion = []
         
         elite = int(tam_poblacion * 0.2)
@@ -110,14 +110,14 @@ def algoritmo_genetico(generaciones=100, tam_poblacion=50):
             print(f"Generación {gen}: Mejor fitness = {mejor_fitness:.4f}")
     
     mejor_cromosoma = fitness_scores[0][0]
-    return mejor_cromosoma
+    return mejor_cromosoma, historial_fitness
 
 print("REPRESENTACIÓN BINARIA")
 print("Problema: Distribuir 39 alumnos en 3 exámenes (A, B, C) de forma equitativa")
 print("Cromosoma: 117 bits (39 alumnos × 3 bits cada uno)")
 print("Gen: [0,1,0] significa alumno asignado a examen B\n")
 
-mejor_solucion = algoritmo_genetico()
+mejor_solucion, historial_fitness = algoritmo_genetico()
 asignaciones_finales = decodificar_cromosoma(mejor_solucion)
 
 print("\nDistribución final:")
@@ -135,3 +135,7 @@ for examen in ['A', 'B', 'C']:
     notas_examen = [notas[i] for i in indices]
     promedios.append(np.mean(notas_examen))
 print(f"Desviación estándar entre promedios: {np.std(promedios):.4f}")
+
+import visualizacion
+visualizacion.graficar_evolucion_fitness(historial_fitness, guardar_como='fitness_repre_binaria.png')
+visualizacion.graficar_histograma_notas(asignaciones_finales, notas, guardar_como='notas_repre_binaria.png')
