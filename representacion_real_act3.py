@@ -144,7 +144,7 @@ def algoritmo_genetico(generaciones=150, tam_poblacion=100):
             padre2 = random.choice(poblacion[:tam_poblacion//4])[0] if isinstance(poblacion[0], tuple) else random.choice(poblacion[:tam_poblacion//4])
             
             hijo = cruce(padre1, padre2)
-            hijo = mutacion_gaussiana(hijo, sigma=0.5)
+            hijo = mutacion_gaussiana(hijo, sigma=0.1)
             nueva_poblacion.append(hijo)
         
         poblacion = nueva_poblacion

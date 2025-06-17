@@ -37,7 +37,6 @@ def mutacion_swap(cromosoma): #???
     return cromosoma_mutado
 
     
-
 def algoritmo_genetico(generaciones=100, tam_poblacion=50):
     poblacion = [crear_cromosoma() for _ in range(tam_poblacion)]
     mejor_fitness = float('-inf')
